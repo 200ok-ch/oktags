@@ -68,6 +68,30 @@ Interactively adding tags (with auto-completion through readline) to a file.
   foo--new tag,tag2
 #+end_example
 
+Renaming tags.
+
+#+begin_example
+  $ okfiletags -l
+  200ok_expense(8)
+  business_card(4)
+
+  $ okfiletags -r 200ok_expense "200ok,expense"
+  $ okfiletags -l
+  expense(8)
+  200ok(8)
+  business_card(4)
+#+end_example
+
+Remove a tag from a file.
+
+#+begin_example
+  $ find . | grep business_card | head -n 1
+  ./archiv/Cyrill_Schwitter--business_card,somedia,seo.pdf
+  $ okfiletags -d seo ./archiv/Cyrill_Schwitter--business_card,somedia,seo.pdf
+  $ find . | grep business_card | head -n 1
+  ./archiv/Cyrill_Schwitter--business_card,somedia.pdf
+#+end_example
+
 * INSTALLATION
 
 =okfiletags= is implemented in [[https://www.ruby-lang.org/en/][Ruby]], dependencies are managed with [[https://bundler.io/][bundler]].
