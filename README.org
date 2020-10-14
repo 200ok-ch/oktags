@@ -68,7 +68,7 @@ Interactively adding tags (with auto-completion through readline) to a file.
   foo--new tag,tag2
 #+end_example
 
-* Installation
+* INSTALLATION
 
 =okfiletags= is implemented in [[https://www.ruby-lang.org/en/][Ruby]], dependencies are managed with [[https://bundler.io/][bundler]].
 
@@ -77,3 +77,15 @@ Interactively adding tags (with auto-completion through readline) to a file.
     cd okfiletags
     bundle
   #+end_example
+
+* TESTS
+
+  Tests are implemented with [[https://rspec.info/][RSpec]] and can be run like this:
+
+#+begin_src shell
+  $ rpsec spec
+  ..
+
+  Finished in 0.00339 seconds (files took 0.06721 seconds to load)
+  2 examples, 0 failures
+#+end_src
