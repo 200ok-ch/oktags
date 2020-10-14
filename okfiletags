@@ -72,6 +72,30 @@ def read_and_add_tags_for(file, tags_path = nil)
   [new_tags, new_filename]
 end
 
+def delete_tag_from_file(tag, file)
+  (puts "Needs a FILE input; i.e. `-d tag1 filename`"; exit) unless file
+
+  tags = find_tags_for(file)
+  tags = tags.reject { |t| t == tag }
+
+  new_filename = filename_with_tags(file, tags)
+  if file != new_filename
+    FileUtils.mv(file, new_filename)
+  end
+
+  new_filename
+end
+
+
+def rename_tag(path, old_tag, new_tag)
+  (puts "Needs a NEW_TAG input; i.e. `-r old_tag new_tag`"; exit) unless new_tag
+
+  Dir.glob("#{path}/**/*--*#{old_tag}*").each do |file|
+    file = add_tags_to_file(new_tag, file)
+    delete_tag_from_file(old_tag, file)
+  end
+end
+
 
 OptionParser.new do |opts|
   opts.banner = 'Usage: tags.rb [options]'
@@ -85,6 +109,14 @@ OptionParser.new do |opts|
   end
   opts.on('-i', '--add-tags-interactively FILE', 'Auto-complete tags and add them to FILE') do |file|
     read_and_add_tags_for(file)
+    exit
+  end
+  opts.on('-r', '--rename-tag OLD_TAG NEW_TAG', 'Rename OLD_TAG to NEW_TAG(S) recursively for all files') do |old_tag|
+    rename_tag('.', old_tag, ARGV[0])
+    exit
+  end
+  opts.on('-d', '--delete-tag-from-file TAG FILE', 'Delete TAG from FILE') do |tag|
+    delete_tag_from_file(tag, ARGV[0])
     exit
   end
 end.parse!
