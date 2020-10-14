@@ -116,9 +116,9 @@ Remove a tag from a file.
 * NOTES
 
 Software systems come and go. It is easy to lose important data in
-(proprietary) legacy systems. Flat files, however, are likely a
-concept that's going to stay; at least they [[https://en.wikipedia.org/wiki/Computer_file#Storage][have been around since
-1961]]. Additional benefits of using plain old files are:
+(proprietary) legacy systems. Plain old files are boring and therefore
+are here to stay; at least they [[https://en.wikipedia.org/wiki/Computer_file#Storage][have been around since 1961]].
+Additional benefits of using plain old files are:
 
 - They are (mostly) platform independent.
 - They can be accessed by a wide array of software
@@ -127,6 +127,14 @@ concept that's going to stay; at least they [[https://en.wikipedia.org/wiki/Comp
     itself, of course).
 - They can be transported independently from the software that captured/created them.
 - They are not proprietary.
+
+=okfiletags= is explicitly built to be just as boring as plain old
+files. It's written in a language that's been proven for shell scripts
+([[https://www.ruby-lang.org/en/][Ruby]]) rather than using something more 'cool' like Clojure (with
+[[https://github.com/borkdude/babashka][babashka]] or [[https://github.com/anmonteiro/lumo][lumo]]). =okfiletags= is boring and here to stay. The idea
+is to tag your files once and for all, so you don't loose your
+important data in something that will become an unsupported legacy
+system at some point.
 
 At [[https://200ok.ch/][200ok]], we develop various Free Software projects that work on plain
 old files:
