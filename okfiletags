@@ -2,13 +2,14 @@
 # coding: utf-8
 
 require 'optparse'
-require "readline"
+require 'readline'
+require 'fileutils'
 
 def find_tags_for(path)
   tags = []
   Dir.glob(path).each do |file|
     file = File.basename(file, ".*")
-    file_tags = file.split('--')[1]&.split(',')&.map(&:strip)
+    file_tags = file.split('--')[1]&.split(',')&.map(&:strip)&.map(&:downcase)
     tags << file_tags if file_tags
   end
 
@@ -43,11 +44,15 @@ def add_tags_to_file(new_tags, file)
   (puts "Needs a FILE input; i.e. `-a tag filename`"; exit) unless file
 
   tags = find_tags_for(file)
-  tags << new_tags.split(',')&.map(&:strip)
+  tags << new_tags.split(',')&.map(&:strip)&.map(&:downcase)
   tags = tags.flatten.uniq.sort
 
   new_filename = filename_with_tags(file, tags)
-  `mv #{file} #{new_filename}`
+  if file != new_filename
+    FileUtils.mv(file, new_filename)
+  end
+
+  new_filename
 end
 
 def read_and_add_tags_for(file, tags_path = nil)
@@ -59,8 +64,9 @@ def read_and_add_tags_for(file, tags_path = nil)
   end
 
   puts "Add new tags:"
-  input = Readline.readline("> ", false)
-  add_tags_to_file(input, file)
+  new_tags = Readline.readline("> ", false)
+  new_filename = add_tags_to_file(new_tags, file)
+  [new_tags, new_filename]
 end
 
 

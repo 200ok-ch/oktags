@@ -1,0 +1,79 @@
+#+begin_example
+       _     __ _ _      _
+  ___ | | __/ _(_) | ___| |_ __ _  __ _ ___
+ / _ \| |/ / |_| | |/ _ \ __/ _` |/ _` / __|
+| (_) |   <|  _| | |  __/ || (_| | (_| \__ \
+ \___/|_|\_\_| |_|_|\___|\__\__,_|\__, |___/
+                                  |___/
+#+end_example
+
+* NAME
+
+=okfiletags= - manage tags on plain old files
+
+* SYNOPSIS
+
+  #+begin_example
+  Usage: tags.rb [options]
+    -l, --list [PATH]                List file tags (optionally for PATH)
+    -a, --add-tags TAGS FILE         Add comma-separated TAGS to FILE
+    -i FILE,                         Auto-complete tags and add them to FILE
+        --add-tags-interactively
+  #+end_example
+
+* DESCRIPTION
+
+=okfiletags= helps you organize your files by managing tags on them.
+It works by adding/removing tags at the end of the filename after a
+=--= qualifier. The implementation is OS-agnostic, so it should work
+on Linux, macOS and Windows.
+
+* EXAMPLES
+
+Listing all tags in the current folder.
+
+  #+begin_example
+    $ touch foo
+    $ touch bar.txt
+    $ touch foobar--tag1,tag2.pdf
+    $ touch baz--tag1.txt
+    $ okfiletags -l
+    tag1(2)
+    tag2(1)
+  #+end_example
+
+Listing all tags for a given path glob (assuming the same data set as above).
+
+#+begin_example
+  $ okfiletags -l '*txt'
+  tag1(1)
+#+end_example
+
+Adding tags to a file. NB: Tags are always unique.
+
+#+begin_example
+  okfiletags -a tag3,tag2 foobar--tag1,tag2.pdf
+  $ ls foobar*
+  foobar--tag1,tag2,tag3.pdf
+#+end_example
+
+Interactively adding tags (with auto-completion through readline) to a file.
+
+#+begin_example
+  $ okfiletags -i foo
+  > t[TAB]
+  tag1  tag2  tag3
+  > tag2, new tag
+  $ ls foo* | grep new
+  foo--new tag,tag2
+#+end_example
+
+* Installation
+
+=okfiletags= is implemented in [[https://www.ruby-lang.org/en/][Ruby]], dependencies are managed with [[https://bundler.io/][bundler]].
+
+  #+begin_example
+    git clone https://github.com/200ok-ch/okfiletags.git
+    cd okfiletags
+    bundle
+  #+end_example
