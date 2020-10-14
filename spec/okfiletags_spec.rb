@@ -2,8 +2,8 @@ load 'okfiletags'
 
 describe "Managing tags on files" do
   before(:each) do
-    @test_folder = '/tmp/okfiletags'
-    FileUtils.remove_dir @test_folder
+    @test_folder = '/tmp/okfiletags_mau'
+    FileUtils.remove_dir(@test_folder, true)
     FileUtils.mkdir @test_folder
     @test_file1 = "#{@test_folder}/foo"
     @test_file2 = "#{@test_folder}/bar.pdf"
