@@ -74,7 +74,6 @@ Renaming tags.
   $ okfiletags -l
   200ok_expense(8)
   business_card(4)
-
   $ okfiletags -r 200ok_expense "200ok,expense"
   $ okfiletags -l
   expense(8)
@@ -108,8 +107,36 @@ Remove a tag from a file.
 
 #+begin_src shell
   $ rpsec spec
-  ..
+  .....
 
-  Finished in 0.00339 seconds (files took 0.06721 seconds to load)
-  2 examples, 0 failures
+  Finished in 0.00351 seconds (files took 0.06834 seconds to load)
+  5 examples, 0 failures
 #+end_src
+
+* NOTES
+
+Software systems come and go. It is easy to lose important data in
+(proprietary) legacy systems. Flat files, however, are likely a
+concept that's going to stay; at least they [[https://en.wikipedia.org/wiki/Computer_file#Storage][have been around since
+1961]]. Additional benefits of using plain old files are:
+
+- They are (mostly) platform independent.
+- They can be accessed by a wide array of software
+  - They do not require a specific UI.
+  - They do not require the use a database (apart from the filesystem
+    itself, of course).
+- They can be transported independently from the software that captured/created them.
+- They are not proprietary.
+
+At [[https://200ok.ch/][200ok]], we develop various Free Software projects that work on plain
+old files:
+
+- [[https://github.com/200ok-ch/organice/][organice]]: An implementation of Org mode without the dependency of
+  Emacs - built for mobile and desktop browsers.
+- [[https://github.com/200ok-ch/okdoc][okdoc]]: A document scanning and archiving solution (which works well
+  with =okfiletags=).
+
+
+* SEE ALSO
+
+[[http://tmsu.org/][tmsu]], [[https://www.tagspaces.org/][tagspaces]]
