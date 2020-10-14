@@ -37,7 +37,10 @@ def list_pretty_tags(path = nil)
 end
 
 def filename_with_tags(file, tags)
-  "#{file.split('--')[0]}--#{tags.join(',')}#{File.extname(file)}"
+  dirname = File.dirname(file)
+  ext = File.extname(file)
+  basename = File.basename(file, ".*").split('--')[0]
+  File.join(dirname, "#{basename}--#{tags.join(',')}#{ext}")
 end
 
 def add_tags_to_file(new_tags, file)
