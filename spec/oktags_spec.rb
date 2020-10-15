@@ -13,7 +13,7 @@ describe 'Managing tags on files' do
 
   describe 'Adding tags to files' do
     it 'adds tags to files without extensions' do
-      new_path = OK::Tags::add_tags_to_file('foo,bar', @test_file1)
+      new_path = OK::Tags.add_tags_to_file('foo,bar', @test_file1)
       expect(new_path).to eq("#{@test_folder}/foo--bar,foo")
       expect(Dir.glob("#{@test_folder}/foo*")).to eq(
         ["#{@test_folder}/foo--bar,foo"]
@@ -21,7 +21,7 @@ describe 'Managing tags on files' do
     end
 
     it 'adds tags to files with extensions' do
-      new_path = OK::Tags::add_tags_to_file('foobar', @test_file2)
+      new_path = OK::Tags.add_tags_to_file('foobar', @test_file2)
       expect(new_path).to eq("#{@test_folder}/bar--foobar.pdf")
       expect(Dir.glob("#{@test_folder}/bar*")).to eq(
         ["#{@test_folder}/bar--foobar.pdf"]
@@ -31,7 +31,7 @@ describe 'Managing tags on files' do
 
   describe 'Remove tags' do
     it 'Removes a tag from a file' do
-      OK::Tags::delete_tag_from_file('foo', @test_file3)
+      OK::Tags.delete_tag_from_file('foo', @test_file3)
       expect(Dir.glob("#{@test_folder}/*").sort).to eql(
         [
           "#{@test_folder}/baz--bar.pdf",
@@ -44,7 +44,7 @@ describe 'Managing tags on files' do
 
   describe 'Renaming tags' do
     it 'Finds files with old tags and modifies them to have the new tag instead' do
-      OK::Tags::rename_tag(@test_folder, 'foo', 'tag1')
+      OK::Tags.rename_tag(@test_folder, 'foo', 'tag1')
       expect(Dir.glob("#{@test_folder}/*").sort).to eq(
         [
           "#{@test_folder}/baz--bar,tag1.pdf",
@@ -55,7 +55,7 @@ describe 'Managing tags on files' do
     end
 
     it 'Finds files with old tags and modifies them to have the new tags instead' do
-      OK::Tags::rename_tag(@test_folder, 'foo', 'tag1,tag2')
+      OK::Tags.rename_tag(@test_folder, 'foo', 'tag1,tag2')
       expect(Dir.glob("#{@test_folder}/*").sort).to eq(
         [
           "#{@test_folder}/baz--bar,tag1,tag2.pdf",
