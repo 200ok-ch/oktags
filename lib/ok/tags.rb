@@ -2,8 +2,28 @@
 # coding: utf-8
 
 require 'optparse'
+require 'set'
 require 'readline'
 require 'fileutils'
+require 'byebug'
+
+# TODO: Put this into it's own file
+class Hash
+  # like invert but not lossy. possibly a good blog post.
+  def safe_invert
+    inject({}) do |acc, (k, v)|
+      if v.is_a? Array
+        v.each do |vx|
+          acc[vx] = acc[vx].nil? ? k : [acc[vx], k].flatten
+        end
+      else
+        acc[v] = acc[v].nil? ? k : [acc[v], k].flatten
+      end
+      acc
+    end
+  end
+end
+
 
 module OK
   module Tags
@@ -16,18 +36,39 @@ module OK
       s&.gsub(/[\[\]]/) { |x| "\\" + x }
     end
 
-    def find_tags_for(path = '**/*')
-      tags = []
-      Dir.glob(escape_glob(path)).each do |file|
-        file = File.basename(file, '.*')
-        file_tags =
-          file.match(/--\[(.*)\]/)&.to_a&.at(1)&.split(',')&.map(&:strip)&.map(
-            &:downcase
-          )
-        tags << file_tags if file_tags
-      end
+    def search_files_with_tags(path = '**/*')
+      tagged_files = Hash.new { |h, k| h[k] = [] }
 
-      tags.flatten.compact.sort
+      Dir.glob(escape_glob(path)).each do |file|
+        basename = File.basename(file, '.*')
+        file_tags =
+          basename.match(/--\[(.*)\]/)&.to_a&.at(1)&.split(',')&.map(&:strip)
+            &.map(&:downcase)
+        file_tags.each { |t| tagged_files[t] << file } if file_tags
+      end
+      tagged_files
+    end
+
+    def list_files_with_tags(tags, path = '**/*')
+      # TODO: Refactor reused code
+      tags = tags.split(',')&.map(&:strip)&.map(&:downcase)
+
+      tagged_files = search_files_with_tags(path)
+      files =
+        tagged_files.safe_invert.filter do |files, file_tags|
+          file_tags = [file_tags] if file_tags.is_a? String
+          tags.to_set.subset?(file_tags.to_set)
+        end&.keys&.flatten&.sort
+
+      puts files
+      files
+    end
+
+    def find_tags_for(path = '**/*')
+      tagged_files =
+        path ? search_files_with_tags(path) : search_files_with_tags
+      # return an array with redundant tags
+      tagged_files.map { |k, v| Array.new(v.count, k) }.flatten.sort
     end
 
     def count_tags(tags)
@@ -137,19 +178,19 @@ module OK
       OptionParser.new do |opts|
         opts.banner = 'Usage: oktags [options]'
         opts.on(
-          '-l',
-          '--list [PATH]',
-          'List file tags (optionally for PATH)'
-        ) do |path|
-          path ? list_pretty_tags(path) : list_pretty_tags
-          exit
-        end
-        opts.on(
           '-a',
           '--add-tags TAGS FILE',
           'Add comma-separated TAGS to FILE'
         ) do |tags|
           add_tags_to_file(tags, ARGV[0])
+          exit
+        end
+        opts.on(
+          '-d',
+          '--delete-tag-from-file TAG FILE',
+          'Delete TAG from FILE'
+        ) do |tag|
+          delete_tag_from_file(tag, ARGV[0])
           exit
         end
         opts.on(
@@ -161,6 +202,14 @@ module OK
           exit
         end
         opts.on(
+          '-l',
+          '--list [PATH]',
+          'List file tags recursively (at optional PATH)'
+        ) do |path|
+          path ? list_pretty_tags(path) : list_pretty_tags
+          exit
+        end
+        opts.on(
           '-r',
           '--rename-tag OLD_TAG NEW_TAG',
           'Rename OLD_TAG to NEW_TAG(S) recursively for all files'
@@ -169,14 +218,20 @@ module OK
           exit
         end
         opts.on(
-          '-d',
-          '--delete-tag-from-file TAG FILE',
-          'Delete TAG from FILE'
-        ) do |tag|
-          delete_tag_from_file(tag, ARGV[0])
+          '-s',
+          '--search-files-with-tags TAGS [PATH]',
+          'Search files which include (comma-separated) TAGS recursively (at optional PATH)'
+        ) do |tags|
+          if ARGV[0]
+            list_files_with_tags(tags, ARGV[0])
+          else
+            list_files_with_tags(tags)
+          end
           exit
         end
       end.parse!
     end
   end
 end
+
+OK::Tags.main
