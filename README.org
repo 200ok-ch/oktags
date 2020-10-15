@@ -29,10 +29,11 @@
 
 * DESCRIPTION
 
-=oktags= helps you organize your files by managing tags on them.
-It works by adding/removing tags at the end of the filename after a
-=--= qualifier. The implementation is OS-agnostic, so it should work
-on Linux, macOS and Windows.
+=oktags= helps you organize your files by managing tags on them. It
+works by adding/removing at the end of the filename. Given a file
+=cat.jpg=, when adding the tags =tag1= and =tag2=, the filename will
+become =cat--[tag1,tag2].jpg=. The implementation is OS-agnostic, so
+it should work on Linux, macOS and Windows.
 
 * EXAMPLES
 
@@ -41,8 +42,8 @@ Listing all tags in the current folder.
   #+begin_example
     $ touch foo
     $ touch bar.txt
-    $ touch foobar--tag1,tag2.pdf
-    $ touch baz--tag1.txt
+    $ touch foobar--[tag1,tag2].pdf
+    $ touch baz--[tag1].txt
     $ oktags -l
     tag1(2)
     tag2(1)
@@ -58,9 +59,9 @@ Listing all tags for a given path glob (assuming the same data set as above).
 Adding tags to a file. NB: Tags are always unique.
 
 #+begin_example
-  oktags -a tag3,tag2 foobar--tag1,tag2.pdf
+  oktags -a tag3,tag2 foobar--[tag1,tag2].pdf
   $ ls foobar*
-  foobar--tag1,tag2,tag3.pdf
+  foobar--[tag1,tag2,tag3].pdf
 #+end_example
 
 Interactively adding tags (with auto-completion through readline) to a file.
@@ -71,7 +72,7 @@ Interactively adding tags (with auto-completion through readline) to a file.
   tag1  tag2  tag3
   > tag2, new tag
   $ ls foo* | grep new
-  foo--new tag,tag2
+  foo--[new tag,tag2]
 #+end_example
 
 Renaming tags.
@@ -91,10 +92,10 @@ Remove a tag from a file.
 
 #+begin_example
   $ find . | grep business_card | head -n 1
-  ./archiv/Cyrill_Schwitter--business_card,somedia,seo.pdf
-  $ oktags -d seo ./archiv/Cyrill_Schwitter--business_card,somedia,seo.pdf
+  ./archiv/Cyrill_Schwitter--[business_card,somedia,seo].pdf
+  $ oktags -d seo ./archiv/Cyrill_Schwitter--[business_card,somedia,seo].pdf
   $ find . | grep business_card | head -n 1
-  ./archiv/Cyrill_Schwitter--business_card,somedia.pdf
+  ./archiv/Cyrill_Schwitter--[business_card,somedia].pdf
 #+end_example
 
 * INSTALLATION
@@ -124,11 +125,10 @@ the =.gem= file to [[https://rubygems.org][rubygems.org]].
   Tests are implemented with [[https://rspec.info/][RSpec]] and can be run like this:
 
 #+begin_src shell
-  $ rpsec spec
-  .....
+  ......
 
-  Finished in 0.00351 seconds (files took 0.06834 seconds to load)
-  5 examples, 0 failures
+  Finished in 0.00408 seconds (files took 0.07109 seconds to load)
+  6 examples, 0 failures
 #+end_src
 
 * NOTES

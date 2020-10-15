@@ -10,16 +10,24 @@ module OK
     class Error < StandardError; end
     extend self
 
-    def find_tags_for(path)
+    # oktags uses --[] as the place to save tags. [] does have special
+    # meaning for Ruby Dir.glob, though. Hence, it's escaped.
+    def escape_glob(s)
+      s&.gsub(/[\[\]]/) { |x| "\\" + x }
+    end
+
+    def find_tags_for(path = '**/*')
       tags = []
-      Dir.glob(path).each do |file|
+      Dir.glob(escape_glob(path)).each do |file|
         file = File.basename(file, '.*')
         file_tags =
-          file.split('--')[1]&.split(',')&.map(&:strip)&.map(&:downcase)
+          file.match(/--\[(.*)\]/)&.to_a&.at(1)&.split(',')&.map(&:strip)&.map(
+            &:downcase
+          )
         tags << file_tags if file_tags
       end
 
-      tags = tags.flatten.compact
+      tags.flatten.compact.sort
     end
 
     def count_tags(tags)
@@ -29,8 +37,8 @@ module OK
       end
     end
 
-    def list_pretty_tags(path = nil)
-      tags = find_tags_for(path || '**/*')
+    def list_pretty_tags(path = '**/*')
+      tags = find_tags_for(path)
       counts = count_tags(tags)
 
       pretty_counts =
@@ -44,8 +52,10 @@ module OK
     def filename_with_tags(file, tags)
       dirname = File.dirname(file)
       ext = File.extname(file)
-      basename = File.basename(file, '.*').split('--')[0]
-      File.join(dirname, "#{basename}--#{tags.join(',')}#{ext}")
+      basename = File.basename(file, '.*')
+      tag_part = basename.match(/--\[(.*)\]/)&.to_a&.at(0)
+      basename = basename.gsub(tag_part, '') if tag_part
+      File.join(dirname, "#{basename}--[#{tags.join(',')}]#{ext}")
     end
 
     def add_tags_to_file(new_tags, file)
@@ -66,7 +76,7 @@ module OK
       new_filename
     end
 
-    def read_and_add_tags_for(file, tags_path = nil)
+    def read_and_add_tags_for(file, tags_path = '**/*')
       unless File.exist?(file)
         (
           puts "File '#{file}' does not exist."
@@ -74,7 +84,7 @@ module OK
         )
       end
 
-      tags = find_tags_for(tags_path || '**/*')
+      tags = find_tags_for(tags_path)
       Readline.completion_proc =
         proc { |input| tags.select { |tag| tag.start_with?(input) } }
 
@@ -109,7 +119,7 @@ module OK
         )
       end
 
-      Dir.glob("#{path}/**/*--*#{old_tag}*").each do |file|
+      Dir.glob("#{path}/**/*--\\[*#{old_tag}*\\]*").each do |file|
         file = add_tags_to_file(new_tag, file)
         delete_tag_from_file(old_tag, file)
       end
@@ -123,7 +133,7 @@ module OK
           '--list [PATH]',
           'List file tags (optionally for PATH)'
         ) do |path|
-          list_pretty_tags(path)
+          path ? list_pretty_tags(path) : list_pretty_tags
           exit
         end
         opts.on(

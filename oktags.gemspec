@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.licenses      = "AGPL-3.0-or-later"
 
   spec.summary       = %q{Manage tags on plain old files.}
-  spec.description   = %q{oktags helps you organize your files by managing tags on them. It works by adding/removing tags at the end of the filename after a -- qualifier. The implementation is OS-agnostic, so it should work on Linux, macOS and Windows.}
+  spec.description   = %q{oktags helps you organize your files by managing tags on them. It works by adding/removing at the end of the filename. Given a file 'cat.jpg', when adding the tags 'tag1' and 'tag2', the filename will become 'cat--[tag1,tag2].jpg'. The implementation is OS-agnostic, so it should work on Linux, macOS and Windows. }
   spec.homepage      = "https://200ok.ch"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
