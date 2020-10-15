@@ -1,29 +1,34 @@
 #+begin_example
-       _     __ _ _      _
-  ___ | | __/ _(_) | ___| |_ __ _  __ _ ___
- / _ \| |/ / |_| | |/ _ \ __/ _` |/ _` / __|
-| (_) |   <|  _| | |  __/ || (_| | (_| \__ \
- \___/|_|\_\_| |_|_|\___|\__\__,_|\__, |___/
-                                  |___/
+       _    _
+  ___ | | _| |_ __ _  __ _ ___
+ / _ \| |/ / __/ _` |/ _` / __|
+| (_) |   <| || (_| | (_| \__ \
+ \___/|_|\_\\__\__,_|\__, |___/
+                     |___/
 #+end_example
+
+#+html: <p align="center"> <a href="https://rubygems.org/gems/oktags"> <img src="https://badge.fury.io/rb/oktags.svg"/> </a> </p>
 
 * NAME
 
-=okfiletags= - manage tags on plain old files
+=oktags= - manage tags on plain old files
 
 * SYNOPSIS
 
   #+begin_example
-  Usage: tags.rb [options]
-    -l, --list [PATH]                List file tags (optionally for PATH)
-    -a, --add-tags TAGS FILE         Add comma-separated TAGS to FILE
-    -i FILE,                         Auto-complete tags and add them to FILE
-        --add-tags-interactively
+    Usage: oktags [options]
+        -l, --list [PATH]                List file tags (optionally for PATH)
+        -a, --add-tags TAGS FILE         Add comma-separated TAGS to FILE
+        -i FILE,                         Auto-complete tags and add them to FILE
+            --add-tags-interactively
+        -r, --rename-tag OLD_TAG NEW_TAG Rename OLD_TAG to NEW_TAG(S) recursively for all files
+        -d TAG FILE,                     Delete TAG from FILE
+            --delete-tag-from-file
   #+end_example
 
 * DESCRIPTION
 
-=okfiletags= helps you organize your files by managing tags on them.
+=oktags= helps you organize your files by managing tags on them.
 It works by adding/removing tags at the end of the filename after a
 =--= qualifier. The implementation is OS-agnostic, so it should work
 on Linux, macOS and Windows.
@@ -37,7 +42,7 @@ Listing all tags in the current folder.
     $ touch bar.txt
     $ touch foobar--tag1,tag2.pdf
     $ touch baz--tag1.txt
-    $ okfiletags -l
+    $ oktags -l
     tag1(2)
     tag2(1)
   #+end_example
@@ -45,14 +50,14 @@ Listing all tags in the current folder.
 Listing all tags for a given path glob (assuming the same data set as above).
 
 #+begin_example
-  $ okfiletags -l '*txt'
+  $ oktags -l '*txt'
   tag1(1)
 #+end_example
 
 Adding tags to a file. NB: Tags are always unique.
 
 #+begin_example
-  okfiletags -a tag3,tag2 foobar--tag1,tag2.pdf
+  oktags -a tag3,tag2 foobar--tag1,tag2.pdf
   $ ls foobar*
   foobar--tag1,tag2,tag3.pdf
 #+end_example
@@ -60,7 +65,7 @@ Adding tags to a file. NB: Tags are always unique.
 Interactively adding tags (with auto-completion through readline) to a file.
 
 #+begin_example
-  $ okfiletags -i foo
+  $ oktags -i foo
   > t[TAB]
   tag1  tag2  tag3
   > tag2, new tag
@@ -71,11 +76,11 @@ Interactively adding tags (with auto-completion through readline) to a file.
 Renaming tags.
 
 #+begin_example
-  $ okfiletags -l
+  $ oktags -l
   200ok_expense(8)
   business_card(4)
-  $ okfiletags -r 200ok_expense "200ok,expense"
-  $ okfiletags -l
+  $ oktags -r 200ok_expense "200ok,expense"
+  $ oktags -l
   expense(8)
   200ok(8)
   business_card(4)
@@ -86,20 +91,32 @@ Remove a tag from a file.
 #+begin_example
   $ find . | grep business_card | head -n 1
   ./archiv/Cyrill_Schwitter--business_card,somedia,seo.pdf
-  $ okfiletags -d seo ./archiv/Cyrill_Schwitter--business_card,somedia,seo.pdf
+  $ oktags -d seo ./archiv/Cyrill_Schwitter--business_card,somedia,seo.pdf
   $ find . | grep business_card | head -n 1
   ./archiv/Cyrill_Schwitter--business_card,somedia.pdf
 #+end_example
 
 * INSTALLATION
 
-=okfiletags= is implemented in [[https://www.ruby-lang.org/en/][Ruby]], dependencies are managed with [[https://bundler.io/][bundler]].
+=oktags= is implemented in [[https://www.ruby-lang.org/en/][Ruby]] and can be installed as a [[https://rubygems.org/][gem]].
 
   #+begin_example
-    git clone https://github.com/200ok-ch/okfiletags.git
-    cd okfiletags
-    bundle
+    gem install oktags
   #+end_example
+
+* DEVELOPMENT
+
+=oktags= is implemented in [[https://www.ruby-lang.org/en/][Ruby]], dependencies are managed with [[https://bundler.io/][bundler]].
+
+After checking out the repo, run =bin/setup= to install dependencies.
+You can also run =bin/console= for an interactive prompt that will
+allow you to experiment.
+
+To install this gem onto your local machine, run =bundle exec rake
+install=. To publish a new version, update the version number in
+=version.rb=, and then run =bundle exec rake publish=, which will
+create a git tag for the version, push git commits and tags, and push
+the =.gem= file to [[https://rubygems.org][rubygems.org]].
 
 * TESTS
 
@@ -128,11 +145,11 @@ Additional benefits of using plain old files are:
 - They can be transported independently from the software that captured/created them.
 - They are not proprietary.
 
-=okfiletags= is decidedly built to be just as boring as plain old
+=oktags= is decidedly built to be just as boring as plain old
 files. It's written in a language that's been proven for shell scripts
 ([[https://www.ruby-lang.org/en/][Ruby]]) rather than using something more 'cool' like Clojure (with
 [[https://github.com/borkdude/babashka][babashka]] or [[https://github.com/anmonteiro/lumo][lumo]]). It also only uses Ruby primitives and has
-dependencies (apart from the test framework). =okfiletags= is
+dependencies (apart from the test framework). =oktags= is
 therefore boring and here to stay. The idea is to tag your files once
 and for all, so you don't loose your important data in something that
 will become an unsupported legacy system at some point.
@@ -143,7 +160,7 @@ old files:
 - [[https://github.com/200ok-ch/organice/][organice]]: An implementation of Org mode without the dependency of
   Emacs - built for mobile and desktop browsers.
 - [[https://github.com/200ok-ch/okdoc][okdoc]]: A document scanning and archiving solution (which works well
-  with =okfiletags=).
+  with =oktags=).
 
 
 * SEE ALSO
