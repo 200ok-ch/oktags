@@ -18,13 +18,15 @@
 
   #+begin_example
     Usage: oktags [options]
-        -l, --list [PATH]                List file tags (optionally for PATH)
         -a, --add-tags TAGS FILE         Add comma-separated TAGS to FILE
-        -i FILE,                         Auto-complete tags and add them to FILE
-            --add-tags-interactively
-        -r, --rename-tag OLD_TAG NEW_TAG Rename OLD_TAG to NEW_TAG(S) recursively for all files
         -d TAG FILE,                     Delete TAG from FILE
             --delete-tag-from-file
+        -i FILE,                         Auto-complete tags and add them to FILE
+            --add-tags-interactively
+        -l, --list [PATH]                List file tags (optional PATH)
+        -r, --rename-tag OLD_TAG NEW_TAG Rename OLD_TAG to NEW_TAG(S) recursively for all files
+        -s TAGS [PATH],                  Search files which include (comma-separated) tags recursively (optional PATH)
+            --search-files-with-tags
   #+end_example
 
 * DESCRIPTION
@@ -37,26 +39,7 @@ it should work on Linux, macOS and Windows.
 
 * EXAMPLES
 
-Listing all tags in the current folder.
-
-  #+begin_example
-    $ touch foo
-    $ touch bar.txt
-    $ touch foobar--[tag1,tag2].pdf
-    $ touch baz--[tag1].txt
-    $ oktags -l
-    tag1(2)
-    tag2(1)
-  #+end_example
-
-Listing all tags for a given path glob (assuming the same data set as above).
-
-#+begin_example
-  $ oktags -l '*txt'
-  tag1(1)
-#+end_example
-
-Adding tags to a file. NB: Tags are always unique.
+Add tags to a file. Tags are always unique.
 
 #+begin_example
   oktags -a tag3,tag2 foobar--[tag1,tag2].pdf
@@ -64,7 +47,17 @@ Adding tags to a file. NB: Tags are always unique.
   foobar--[tag1,tag2,tag3].pdf
 #+end_example
 
-Interactively adding tags (with auto-completion through readline) to a file.
+Delete a tag from a file.
+
+#+begin_example
+  $ find . | grep business_card | head -n 1
+  ./archiv/Reto_Huber--[business_card,somedia,seo].pdf
+  $ oktags -d seo ./archiv/Reto_Huber--[business_card,somedia,seo].pdf
+  $ find . | grep business_card | head -n 1
+  ./archiv/Reto_Huber--[business_card,somedia].pdf
+#+end_example
+
+Interactively add tags (with auto-completion through readline) to a file.
 
 #+begin_example
   $ oktags -i foo
@@ -72,10 +65,29 @@ Interactively adding tags (with auto-completion through readline) to a file.
   tag1  tag2  tag3
   > tag2, new tag
   $ ls foo* | grep new
-  foo--[new tag,tag2]
+  foo--[new_tag,tag2]
 #+end_example
 
-Renaming tags.
+List all tags in the current folder.
+
+#+begin_example
+  $ touch foo
+  $ touch bar.txt
+  $ touch foobar--[tag1,tag2].pdf
+  $ touch baz--[tag1].txt
+  $ oktags -l
+  tag1(2)
+  tag2(1)
+#+end_example
+
+List all tags for a given path glob (assuming the same data set as above).
+
+#+begin_example
+  $ oktags -l '*txt'
+  tag1(1)
+#+end_example
+
+Rename tag.
 
 #+begin_example
   $ oktags -l
@@ -88,14 +100,15 @@ Renaming tags.
   business_card(4)
 #+end_example
 
-Remove a tag from a file.
+Search files with tags.
 
 #+begin_example
-  $ find . | grep business_card | head -n 1
-  ./archiv/Cyrill_Schwitter--[business_card,somedia,seo].pdf
-  $ oktags -d seo ./archiv/Cyrill_Schwitter--[business_card,somedia,seo].pdf
-  $ find . | grep business_card | head -n 1
-  ./archiv/Cyrill_Schwitter--[business_card,somedia].pdf
+  $ oktags -s somedia,seo,business_card
+  archiv/Reto_Huber--[business_card,seo,somedia].pdf
+  archiv/Reto_Huber--[business_card,seo,somedia].txt
+  $ oktags -s business_card '**/*pdf'
+  archiv/Reto_Huber--[business_card,seo,somedia].pdf
+  archiv/Stefan_Schmidt--[business_card,lawoon].pdf
 #+end_example
 
 * INSTALLATION
