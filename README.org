@@ -135,14 +135,8 @@ the =.gem= file to [[https://rubygems.org][rubygems.org]].
 
 * TESTS
 
-  Tests are implemented with [[https://rspec.info/][RSpec]] and can be run like this:
-
-#+begin_src shell
-  ......
-
-  Finished in 0.00408 seconds (files took 0.07109 seconds to load)
-  6 examples, 0 failures
-#+end_src
+Tests are implemented with [[https://rspec.info/][RSpec]] and can be run with =bundle exec
+rspec spec=.
 
 * NOTES
 
