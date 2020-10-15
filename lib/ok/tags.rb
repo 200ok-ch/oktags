@@ -67,7 +67,15 @@ module OK
       end
 
       tags = find_tags_for(file)
-      tags << new_tags.split(',')&.map(&:strip)&.map(&:downcase)
+      tags <<
+        new_tags.split(',')&.map(&:strip)&.map(&:downcase)&.map do |t|
+          # Replace spaces in tags with underscores, because spaces in
+          # filenames can cause all kinds of issues depending on what
+          # tools are used on the filenames. The less requirements for
+          # escaping filenames, the better.
+          t.gsub(' ', '_')
+        end
+
       tags = tags.flatten.uniq.sort
 
       new_filename = filename_with_tags(file, tags)

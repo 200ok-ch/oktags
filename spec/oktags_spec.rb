@@ -30,6 +30,14 @@ describe 'Managing tags on files' do
         ["#{@test_folder}/bar--[foobar].pdf"]
       )
     end
+
+    it 'spaces in tags are replaced by underscores' do
+      new_path = OK::Tags.add_tags_to_file('foo bar', @test_file2)
+      expect(new_path).to eq("#{@test_folder}/bar--[foo_bar].pdf")
+      expect(Dir.glob("#{@test_folder}/bar*")).to eq(
+        ["#{@test_folder}/bar--[foo_bar].pdf"]
+      )
+    end
   end
 
   describe 'Listing tags for path' do
