@@ -5,7 +5,6 @@ require 'optparse'
 require 'set'
 require 'readline'
 require 'fileutils'
-require 'byebug'
 
 # TODO: Put this into it's own file
 class Hash
