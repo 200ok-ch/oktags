@@ -141,8 +141,8 @@ rspec spec=.
 * NOTES
 
 Software systems come and go. It is easy to lose important data in
-(proprietary) legacy systems. Plain old files are boring and therefore
-are here to stay; at least they [[https://en.wikipedia.org/wiki/Computer_file#Storage][have been around since 1961]].
+(proprietary) legacy systems. Plain old files are boring and are
+therefore here to stay; at least they [[https://en.wikipedia.org/wiki/Computer_file#Storage][have been around since 1961]].
 Additional benefits of using plain old files are:
 
 - They are (mostly) platform independent.
@@ -153,14 +153,14 @@ Additional benefits of using plain old files are:
 - They can be transported independently from the software that captured/created them.
 - They are not proprietary.
 
-=oktags= is decidedly built to be just as boring as plain old
-files. It's written in a language that's been proven for shell scripts
-([[https://www.ruby-lang.org/en/][Ruby]]) rather than using something more 'cool' like Clojure (with
-[[https://github.com/borkdude/babashka][babashka]] or [[https://github.com/anmonteiro/lumo][lumo]]). It also only uses Ruby primitives and has
-dependencies (apart from the test framework). =oktags= is
-therefore boring and here to stay. The idea is to tag your files once
-and for all, so you don't loose your important data in something that
-will become an unsupported legacy system at some point.
+=oktags= is decidedly built to be just as boring as plain old files.
+It's written in a language that's been proven for shell scripts ([[https://www.ruby-lang.org/en/][Ruby]])
+rather than using something more 'cool'/'interesting'. It also only
+uses Ruby built-ins and has no dependencies when run as a CLI or
+library. =oktags= is therefore boring and here to stay. The idea is to
+tag your files once and for all, so you will not loose your important
+data in something that will become an unsupported legacy system at
+some point.
 
 At [[https://200ok.ch/][200ok]], we develop various Free Software projects that work on plain
 old files:
