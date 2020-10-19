@@ -5,24 +5,7 @@ require 'optparse'
 require 'set'
 require 'readline'
 require 'fileutils'
-
-# TODO: Put this into it's own file
-class Hash
-  # like invert but not lossy. possibly a good blog post.
-  def safe_invert
-    inject({}) do |acc, (k, v)|
-      if v.is_a? Array
-        v.each do |vx|
-          acc[vx] = acc[vx].nil? ? k : [acc[vx], k].flatten
-        end
-      else
-        acc[v] = acc[v].nil? ? k : [acc[v], k].flatten
-      end
-      acc
-    end
-  end
-end
-
+require File.expand_path(File.join(%w[.. .. hash]), __FILE__)
 
 module OK
   module Tags
@@ -233,4 +216,4 @@ module OK
   end
 end
 
-OK::Tags.main
+OK::Tags.main if $0 == __FILE__

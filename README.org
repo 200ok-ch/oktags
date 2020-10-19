@@ -42,7 +42,14 @@ it should work on Linux, macOS and Windows.
 Add tags to a file. Tags are always unique.
 
 #+begin_example
-  oktags -a tag3,tag2 foobar--[tag1,tag2].pdf
+  $ touch foobar
+  $ oktags -a tag1 foobar
+  $ ls foobar*
+  foobar--[tag1]
+  $ oktags -a tag2 foobar--\[tag1\]
+  $ ls foobar*
+  foobar--[tag1,tag2]
+  $ oktags -a tag3,tag2 foobar--[tag1,tag2].pdf
   $ ls foobar*
   foobar--[tag1,tag2,tag3].pdf
 #+end_example
@@ -93,7 +100,7 @@ Rename tag.
   $ oktags -l
   200ok_expense(8)
   business_card(4)
-  $ oktags -r 200ok_expense "200ok,expense"
+  $ oktags -r 200ok_expense 200ok,expense
   $ oktags -l
   expense(8)
   200ok(8)

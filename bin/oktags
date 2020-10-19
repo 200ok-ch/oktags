@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'oktags'
+require File.expand_path(File.join(%w[.. .. lib ok tags]), __FILE__)
 OK::Tags.main
