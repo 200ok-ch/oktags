@@ -37,7 +37,7 @@ module OK
 
       tagged_files = search_files_with_tags(path)
       files =
-        tagged_files.safe_invert.filter do |files, file_tags|
+        tagged_files.safe_invert.select do |files, file_tags|
           file_tags = [file_tags] if file_tags.is_a? String
           tags.to_set.subset?(file_tags.to_set)
         end&.keys&.flatten&.sort
